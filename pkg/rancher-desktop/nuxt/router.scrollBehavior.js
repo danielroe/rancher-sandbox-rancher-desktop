@@ -1,6 +1,6 @@
 import { getMatchedComponents, setScrollRestoration } from './utils'
 
-if (process.client) {
+if (import.meta.client) {
   if ('scrollRestoration' in window.history) {
     setScrollRestoration('manual')
 

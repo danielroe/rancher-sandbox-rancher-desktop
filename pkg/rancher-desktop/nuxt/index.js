@@ -30,7 +30,7 @@ Vue.component(ClientOnly.name, ClientOnly)
 Vue.component(NoSsr.name, {
   ...NoSsr,
   render (h, ctx) {
-    if (process.client && !NoSsr._warned) {
+    if (import.meta.client && !NoSsr._warned) {
       NoSsr._warned = true
 
       console.warn('<no-ssr> has been deprecated and will be removed in Nuxt 3, please use <client-only> instead')
@@ -51,7 +51,7 @@ Vue.component(Nuxt.name, Nuxt)
 Object.defineProperty(Vue.prototype, '$nuxt', {
   get() {
     const globalNuxt = this.$root.$options.$nuxt
-    if (process.client && !globalNuxt && typeof window !== 'undefined') {
+    if (import.meta.client && !globalNuxt && typeof window !== 'undefined') {
       return window.$nuxt
     }
     return globalNuxt
@@ -66,7 +66,7 @@ const defaultTransition = {"name":"page","mode":"out-in","appear":true,"appearCl
 const originalRegisterModule = Vuex.Store.prototype.registerModule
 
 function registerModule (path, rawModule, options = {}) {
-  const preserveState = process.client && (
+  const preserveState = import.meta.client && (
     Array.isArray(path)
       ? !!path.reduce((namespacedState, path) => namespacedState && namespacedState[path], this.state)
       : path in this.state
@@ -199,7 +199,7 @@ async function createApp(ssrContext, config = {}) {
   // Inject runtime config as $config
   inject('config', config)
 
-  if (process.client) {
+  if (import.meta.client) {
     // Replace store state before plugins execution
     if (window.__NUXT__ && window.__NUXT__.state) {
       store.replaceState(window.__NUXT__.state)
@@ -207,7 +207,7 @@ async function createApp(ssrContext, config = {}) {
   }
 
   // Add enablePreview(previewData = {}) in context for plugins
-  if (process.static && process.client) {
+  if (process.static && import.meta.client) {
     app.context.enablePreview = function (previewData = {}) {
       app.previewData = Object.assign({}, previewData)
       inject('preview', previewData)
@@ -220,7 +220,7 @@ async function createApp(ssrContext, config = {}) {
   }
 
   // Lock enablePreview in context
-  if (process.static && process.client) {
+  if (process.static && import.meta.client) {
     app.context.enablePreview = function () {
       console.warn('You cannot call enablePreview() outside a plugin.')
     }
@@ -229,7 +229,7 @@ async function createApp(ssrContext, config = {}) {
   // Wait for async component to be resolved first
   await new Promise((resolve, reject) => {
     // Ignore 404s rather than blindly replacing URL in browser
-    if (process.client) {
+    if (import.meta.client) {
       const { route } = router.resolve(app.context.route.fullPath)
       if (!route.matched.length) {
         return resolve()
@@ -242,7 +242,7 @@ async function createApp(ssrContext, config = {}) {
 
       // navigated to a different route in router guard
       const unregister = router.afterEach(async (to, from) => {
-        if (process.server && ssrContext && ssrContext.url) {
+        if (import.meta.server && ssrContext && ssrContext.url) {
           ssrContext.url = to.fullPath
         }
         app.context.route = await getRouteData(to)

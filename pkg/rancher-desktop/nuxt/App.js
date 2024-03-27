@@ -66,7 +66,7 @@ export default {
     // Add this.$nuxt in child instances
     this.$root.$options.$nuxt = this
 
-    if (process.client) {
+    if (import.meta.client) {
       // add to window so we can listen when ready
       window.$nuxt = this
 
@@ -101,7 +101,7 @@ export default {
 
   methods: {
     refreshOnlineStatus () {
-      if (process.client) {
+      if (import.meta.client) {
         if (typeof window.navigator.onLine === 'undefined') {
           // If the browser doesn't support connection status reports
           // assume that we are online because most apps' only react

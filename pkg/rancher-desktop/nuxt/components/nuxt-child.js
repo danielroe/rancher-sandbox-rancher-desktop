@@ -43,7 +43,7 @@ export default {
         listeners[key] = transition[key].bind(_parent)
       }
     })
-    if (process.client) {
+    if (import.meta.client) {
       // Add triggerScroll event on beforeEnter (fix #1376)
       const beforeEnter = listeners.beforeEnter
       listeners.beforeEnter = (el) => {

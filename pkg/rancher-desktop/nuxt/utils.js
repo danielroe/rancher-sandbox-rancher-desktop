@@ -3,7 +3,7 @@ import { isSamePath as _isSamePath, joinURL, normalizeURL, withQuery, withoutTra
 
 // window.{{globals.loadedCallback}} hook
 // Useful for jsdom testing or plugins (https://github.com/tmpvar/jsdom#dealing-with-asynchronous-script-loading)
-if (process.client) {
+if (import.meta.client) {
   window.onNuxtReadyCbs = []
   window.onNuxtReady = (cb) => {
     window.onNuxtReadyCbs.push(cb)
@@ -239,13 +239,13 @@ export async function setContext (app, context) {
         })
       } else {
         path = withQuery(path, query)
-        if (process.server) {
+        if (import.meta.server) {
           app.context.next({
             path,
             status
           })
         }
-        if (process.client) {
+        if (import.meta.client) {
           // https://developer.mozilla.org/en-US/docs/Web/API/Location/replace
           window.location.replace(path)
 
@@ -254,10 +254,10 @@ export async function setContext (app, context) {
         }
       }
     }
-    if (process.server) {
+    if (import.meta.server) {
       app.context.beforeNuxtRender = fn => context.beforeRenderFns.push(fn)
     }
-    if (process.client) {
+    if (import.meta.client) {
       app.context.nuxtState = window.__NUXT__
     }
   }

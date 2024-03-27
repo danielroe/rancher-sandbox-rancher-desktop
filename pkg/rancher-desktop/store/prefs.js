@@ -299,7 +299,7 @@ export const actions = {
   },
 
   loadTheme({ state, dispatch }) {
-    if ( process.client ) {
+    if ( import.meta.client ) {
       const watchDark = window.matchMedia('(prefers-color-scheme: dark)');
       const watchLight = window.matchMedia('(prefers-color-scheme: light)');
       const watchNone = window.matchMedia('(prefers-color-scheme: no-preference)');

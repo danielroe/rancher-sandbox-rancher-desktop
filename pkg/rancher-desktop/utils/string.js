@@ -70,7 +70,7 @@ export function random32(count) {
   const out = [];
   let i;
 
-  if ( process.server ) {
+  if ( import.meta.server ) {
     const crypto = require('crypto');
 
     for ( i = 0 ; i < count ; i++ ) {
